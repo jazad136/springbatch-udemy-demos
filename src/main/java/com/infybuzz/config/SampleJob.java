@@ -1,0 +1,66 @@
+package com.infybuzz.config;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepContribution;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.scope.context.ChunkContext;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.repeat.RepeatStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
+
+@Configuration
+public class SampleJob {
+
+	
+	@Autowired
+	private JobRepository jobRepository;
+	@Autowired
+	private PlatformTransactionManager transactionManager;
+	
+	@Autowired 
+	private static final Logger logger = LoggerFactory.getLogger(SampleJob.class);
+
+	@Bean
+	public Job firstJob() { 
+		/*
+		 * jobBuilderFactory.get("First Job")
+		 * .start()
+		 */
+		return new JobBuilder("First Job", jobRepository)
+				.start(firstStep())
+				.build();
+	}
+	public Step firstStep() { 
+		/*
+		 * stepBuilderFactory.get("First Step")
+		 * .tasklet()
+		 */
+		return new StepBuilder("First Step", jobRepository)
+				.tasklet(firstTask(), transactionManager)
+				.build();
+	}
+	
+	public Tasklet firstTask() { 
+		
+		  return new Tasklet() { 
+		  	public RepeatStatus execute(StepContribution contribution, ChunkContext context) { 
+		  		System.err.println("This is first tasklet step");
+//		  		logger.warn("This is first tasklet step");
+		  		return RepeatStatus.FINISHED;
+		  	}
+		  };
+		 
+//		return (contribution, context) -> { 
+//			System.out.println("This is first tasklet step");
+//			return RepeatStatus.FINISHED;
+//		};
+	}
+}
