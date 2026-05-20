@@ -32,19 +32,32 @@ public class SampleJob {
 	public Job firstJob() { 
 		/*
 		 * jobBuilderFactory.get("First Job")
-		 * .start()
+		 * .start(firstStep())
+		 * .next(secondStep())
 		 */
 		return new JobBuilder("First Job", jobRepository)
 				.start(firstStep())
+				.next(secondStep())
 				.build();
 	}
 	public Step firstStep() { 
 		/*
 		 * stepBuilderFactory.get("First Step")
 		 * .tasklet()
+  		 * .build()
 		 */
 		return new StepBuilder("First Step", jobRepository)
 				.tasklet(firstTask(), transactionManager)
+				.build();
+	}
+	public Step secondStep() { 
+		/*
+		 * stepBuilderFactory.get("Second Step")
+		 * .tasklet()
+		 * .build()
+		 */
+		return new StepBuilder("Second Step", jobRepository)
+				.tasklet(secondTask(), transactionManager)
 				.build();
 	}
 	
@@ -62,5 +75,13 @@ public class SampleJob {
 //			System.out.println("This is first tasklet step");
 //			return RepeatStatus.FINISHED;
 //		};
+	}
+	public Tasklet secondTask() { 
+		return new Tasklet() { 
+		  	public RepeatStatus execute(StepContribution contribution, ChunkContext context) { 
+		  		System.err.println("This is second tasklet step");
+		  		return RepeatStatus.FINISHED;
+		  	}
+	  	};
 	}
 }
