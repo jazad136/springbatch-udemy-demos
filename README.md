@@ -1,10 +1,11 @@
 ## Spring Batch Coding Demonstrations
 
-repo maintained by Jonathan Saddler, Ph. D. 
+### repo maintained by Jonathan Saddler, Ph. D. 
 
-*initial code sourced from Udemy Business course*
-_"Batch Processing of Data with Java Spring Framework & MySQL. Item Reader, Item Writer, Item Processor & JPA Reader"_
+#### initial code sourced from Udemy Business course
 
-by Infybuzz Learning, updated 2025
+#### _"Batch Processing of Data with Java Spring Framework & MySQL. Item Reader, Item Writer, Item Processor & JPA Reader"_
+
+#### by Infybuzz Learning, updated 2025
 
 
