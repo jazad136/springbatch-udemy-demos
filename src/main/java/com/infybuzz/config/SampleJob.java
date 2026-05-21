@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.infybuzz.service.SecondTasklet;
+
 @Configuration
 public class SampleJob {
 
@@ -24,6 +26,9 @@ public class SampleJob {
 	private JobRepository jobRepository;
 	@Autowired
 	private PlatformTransactionManager transactionManager;
+	
+	@Autowired
+	private SecondTasklet secondTasklet;
 	
 	@Autowired 
 	private static final Logger logger = LoggerFactory.getLogger(SampleJob.class);
@@ -57,7 +62,7 @@ public class SampleJob {
 		 * .build()
 		 */
 		return new StepBuilder("Second Step", jobRepository)
-				.tasklet(secondTask(), transactionManager)
+				.tasklet(secondTasklet, transactionManager)
 				.build();
 	}
 	
@@ -75,13 +80,5 @@ public class SampleJob {
 //			System.out.println("This is first tasklet step");
 //			return RepeatStatus.FINISHED;
 //		};
-	}
-	public Tasklet secondTask() { 
-		return new Tasklet() { 
-		  	public RepeatStatus execute(StepContribution contribution, ChunkContext context) { 
-		  		System.err.println("This is second tasklet step");
-		  		return RepeatStatus.FINISHED;
-		  	}
-	  	};
 	}
 }
