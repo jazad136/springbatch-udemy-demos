@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 public class SecondTasklet implements Tasklet {
 	public RepeatStatus execute(StepContribution contribution, ChunkContext context) { 
   		System.err.println("This is second tasklet step");
+  		System.err.println(context.getStepContext().getJobExecutionContext());
   		return RepeatStatus.FINISHED;
   	}
 }
