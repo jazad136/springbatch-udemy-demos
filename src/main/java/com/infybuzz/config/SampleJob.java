@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.infybuzz.listener.FirstJobListener;
+import com.infybuzz.listener.FirstStepListener;
 import com.infybuzz.service.SecondTasklet;
 
 @Configuration
@@ -35,6 +36,9 @@ public class SampleJob {
 	@Autowired
 	private FirstJobListener firstJobListener;
 	
+	@Autowired
+	private FirstStepListener firstStepListener;
+
 	@Autowired 
 	private static final Logger logger = LoggerFactory.getLogger(SampleJob.class);
 
@@ -60,6 +64,7 @@ public class SampleJob {
 		 */
 		return new StepBuilder("First Step", jobRepository)
 				.tasklet(firstTask(), transactionManager)
+				.listener(firstStepListener)
 				.build();
 	}
 	public Step secondStep() { 
@@ -79,6 +84,7 @@ public class SampleJob {
 		  	public RepeatStatus execute(StepContribution contribution, ChunkContext context) { 
 		  		System.err.println("This is first tasklet step");
 //		  		logger.warn("This is first tasklet step");
+		  		System.err.println("SEC = " + context.getStepContext().getStepExecutionContext());
 		  		return RepeatStatus.FINISHED;
 		  	}
 		  };
