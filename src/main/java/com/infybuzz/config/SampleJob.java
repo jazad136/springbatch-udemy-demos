@@ -6,6 +6,7 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.infybuzz.listener.FirstJobListener;
 import com.infybuzz.service.SecondTasklet;
 
 @Configuration
@@ -30,6 +32,9 @@ public class SampleJob {
 	@Autowired
 	private SecondTasklet secondTasklet;
 	
+	@Autowired
+	private FirstJobListener firstJobListener;
+	
 	@Autowired 
 	private static final Logger logger = LoggerFactory.getLogger(SampleJob.class);
 
@@ -41,8 +46,10 @@ public class SampleJob {
 		 * .next(secondStep())
 		 */
 		return new JobBuilder("First Job", jobRepository)
+				.incrementer(new RunIdIncrementer())
 				.start(firstStep())
 				.next(secondStep())
+				.listener(firstJobListener)
 				.build();
 	}
 	public Step firstStep() { 
