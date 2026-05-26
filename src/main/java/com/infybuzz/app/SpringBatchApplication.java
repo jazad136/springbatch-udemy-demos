@@ -5,7 +5,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan({"com.infybuzz.config", "com.infybuzz.service", "com.infybuzz.listener"})
+@ComponentScan({"com.infybuzz.config", 
+	"com.infybuzz.service",
+	"com.infybuzz.reader",
+	"com.infybuzz.processor",
+	"com.infybuzz.writer",
+	"com.infybuzz.listener"})
 public class SpringBatchApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBatchApplication.class, args);

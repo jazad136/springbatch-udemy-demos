@@ -19,7 +19,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import com.infybuzz.listener.FirstJobListener;
 import com.infybuzz.listener.FirstStepListener;
+import com.infybuzz.processor.FirstItemProcessor;
+import com.infybuzz.reader.FirstItemReader;
 import com.infybuzz.service.SecondTasklet;
+import com.infybuzz.writer.FirstItemWriter;
 
 @Configuration
 public class SampleJob {
@@ -39,6 +42,14 @@ public class SampleJob {
 	@Autowired
 	private FirstStepListener firstStepListener;
 
+	@Autowired
+	private FirstItemReader firstItemReader;
+	
+	@Autowired
+	private FirstItemProcessor firstItemProcessor;
+	
+	@Autowired
+	private FirstItemWriter firstItemWriter;
 	@Autowired 
 	private static final Logger logger = LoggerFactory.getLogger(SampleJob.class);
 
@@ -98,6 +109,16 @@ public class SampleJob {
 	public Job secondJob() {
 		return new JobBuilder("Second Job", jobRepository)
 				.incrementer(new RunIdIncrementer())
+				.start(firstChunkStep())
+				.build();
+	}
+	
+	public Step firstChunkStep() { 
+		return new StepBuilder("First Chunk Step", jobRepository)
+				.<Integer, Long>chunk(3, transactionManager)
+				.reader(firstItemReader)
+				.processor(firstItemProcessor)
+				.writer(firstItemWriter)
 				.build();
 	}
 }
