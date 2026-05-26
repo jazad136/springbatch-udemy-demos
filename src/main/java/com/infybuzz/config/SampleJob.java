@@ -110,6 +110,7 @@ public class SampleJob {
 		return new JobBuilder("Second Job", jobRepository)
 				.incrementer(new RunIdIncrementer())
 				.start(firstChunkStep())
+				.next(secondStep())
 				.build();
 	}
 	
