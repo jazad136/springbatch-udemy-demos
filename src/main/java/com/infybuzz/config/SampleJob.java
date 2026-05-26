@@ -42,7 +42,7 @@ public class SampleJob {
 	@Autowired 
 	private static final Logger logger = LoggerFactory.getLogger(SampleJob.class);
 
-	@Bean
+//	@Bean
 	public Job firstJob() { 
 		/*
 		 * jobBuilderFactory.get("First Job")
@@ -56,7 +56,7 @@ public class SampleJob {
 				.listener(firstJobListener)
 				.build();
 	}
-	public Step firstStep() { 
+	public Step firstStep() {
 		/*
 		 * stepBuilderFactory.get("First Step")
 		 * .tasklet()
@@ -67,7 +67,7 @@ public class SampleJob {
 				.listener(firstStepListener)
 				.build();
 	}
-	public Step secondStep() { 
+	public Step secondStep() {
 		/*
 		 * stepBuilderFactory.get("Second Step")
 		 * .tasklet()
@@ -93,5 +93,11 @@ public class SampleJob {
 //			System.out.println("This is first tasklet step");
 //			return RepeatStatus.FINISHED;
 //		};
+	}
+	@Bean
+	public Job secondJob() {
+		return new JobBuilder("Second Job", jobRepository)
+				.incrementer(new RunIdIncrementer())
+				.build();
 	}
 }
