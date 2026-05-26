@@ -115,7 +115,7 @@ public class SampleJob {
 	
 	public Step firstChunkStep() { 
 		return new StepBuilder("First Chunk Step", jobRepository)
-				.<Integer, Long>chunk(3, transactionManager)
+				.<Integer, Long>chunk(4, transactionManager)
 				.reader(firstItemReader)
 				.processor(firstItemProcessor)
 				.writer(firstItemWriter)
