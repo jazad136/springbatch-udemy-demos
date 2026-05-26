@@ -53,7 +53,7 @@ public class SampleJob {
 	@Autowired 
 	private static final Logger logger = LoggerFactory.getLogger(SampleJob.class);
 
-//	@Bean
+	@Bean
 	public Job firstJob() { 
 		/*
 		 * jobBuilderFactory.get("First Job")
@@ -110,7 +110,6 @@ public class SampleJob {
 		return new JobBuilder("Second Job", jobRepository)
 				.incrementer(new RunIdIncrementer())
 				.start(firstChunkStep())
-				.next(secondStep())
 				.build();
 	}
 	
