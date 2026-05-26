@@ -10,7 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 	"com.infybuzz.reader",
 	"com.infybuzz.processor",
 	"com.infybuzz.writer",
-	"com.infybuzz.listener"})
+	"com.infybuzz.listener",
+	"com.infybuzz.controller"})
 public class SpringBatchApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBatchApplication.class, args);
