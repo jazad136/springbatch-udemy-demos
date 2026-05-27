@@ -3,6 +3,7 @@ package com.infybuzz.controller;
 import java.util.List;
 
 import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
@@ -19,12 +20,15 @@ import com.infybuzz.service.JobService;
 @RestController
 @RequestMapping("/api/job")
 public class JobController {
+
+	@Autowired
+	JobService jobService;
 	
 	@Autowired
-	JobService jobService; 
+	JobOperator jobOperator;
 	
 	@GetMapping("/ping")
-	public String ping() { 
+	public String ping() {
 		return "Hello World.";
 	}
 	
@@ -35,5 +39,14 @@ public class JobController {
 	) throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException {
 		jobService.startJob(jobName, jobParamsRequestList);
 		return "Job started...";
+	}
+	@GetMapping("/stop/{jobExecutionId}")
+	public String stopJob(@PathVariable("jobExecutionId") long jobExecutionId) {
+		try {
+			jobOperator.stop(jobExecutionId);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return "Job stopped...";
 	}
 }
