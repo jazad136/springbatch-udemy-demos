@@ -1,6 +1,7 @@
 package com.infybuzz.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import com.infybuzz.model.JobParamsRequest;
 
 @Service
 public class JobService {
@@ -31,33 +34,29 @@ public class JobService {
 	Job secondJob;
 
 	@Async
-	public void startJob(String jobName) {
+	public void startJob(String jobName, List<JobParamsRequest> jobParamsRequestList) {
 		Map<String, JobParameter<?>> params = new HashMap<>();
 		
-		params.put("currentTime",
-				new JobParameter<Long>(
-					System.currentTimeMillis(),
-					Long.class
-				));
+		params.put("currentTime",new JobParameter<Long>(System.currentTimeMillis(),Long.class));
+		jobParamsRequestList.stream().forEach(jobParamsReq -> 
+			params.put(jobParamsReq.paramKey, new JobParameter<String>(jobParamsReq.paramValue, String.class))
+		);
 		JobParameters jobParameters = new JobParameters(params);
 		try {
 			JobExecution jobExecution = null;
 			if(jobName.equals("First Job")) { 
 				jobExecution = jobLauncher.run(firstJob, jobParameters);
-//				return "Job started...";
 			}
 			else if(jobName.equals("Second Job")) {
 				jobExecution = jobLauncher.run(secondJob, jobParameters);
-//				return "Job started...";		
 			}
-			// we're going multithreaded so I prefer to start using loggers instead.
-			// we updated application.properties accordingly
-			logger.warn("Job Execution ID = " + jobExecution.getId());
-//			System.err.println("Job Execution ID = " + jobExecution.getId());
+			if(jobExecution == null) 
+				System.err.println("No job started.");
+			else
+				System.err.println("Job Execution ID = " + jobExecution.getId());
 		} catch(Exception e) {
-			logger.warn("Exception while starting job");
-//			System.out.println("Exception while starting job");
+			logger.debug("Exception while starting job", e);
 		}
-//		return "No job started.";
+		
 	}
 }
